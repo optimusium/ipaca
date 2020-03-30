@@ -31,9 +31,19 @@ while 1:
     temp=eval(input())
     tim=time.time()
     #image login is from image recognition
-    inf=open("image_login.csv","r")
+    try:
+        inf=open("image_login.csv","r")
+    except:
+        time.sleep(1)
+        inf=open("image_login.csv","r")
+        pass
     #generating alert file
-    outf=open("alert.csv","w+")
+    try:
+        outf=open("alert.csv","w+")
+    except:
+        time.sleep(1)
+        outf=open("alert.csv","w+")
+        pass
     outf.write("Name,Alert,Temperature\n")
     bufl=""
     latest=99999.0
