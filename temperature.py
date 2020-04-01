@@ -11,7 +11,10 @@ for line in inf0.readlines():
     outf0.write(line)
 outf0.close()
 inf0.close()
+time.sleep(0.01)
 
+os.popen("copy alert.csv alert_bk.csv")
+time.sleep(0.1)
 
 while 1:
     #getting blacklist
@@ -73,7 +76,11 @@ while 1:
         elif buf[1]!=bufl:
             ter=buf[1]+",99999,%s\n" % temp
     outf.write(ter)
+    outf.close()
+    time.sleep(0.01)
 
+    os.popen("copy alert.csv alert_bk.csv")
+    time.sleep(0.1)
     
         
         
