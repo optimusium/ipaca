@@ -77,14 +77,10 @@ while 1:
             ter=buf[1]+",99999,%s\n" % temp
     outf.write(ter)
     outf.close()
+    inf.close()
     time.sleep(0.01)
 
     os.popen("copy alert.csv alert_bk.csv")
     time.sleep(0.1)
     
-        
-        
-        
-        
-    inf.close()
-    outf.close()
+
