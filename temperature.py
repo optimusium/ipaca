@@ -30,9 +30,9 @@ while 1:
         
     #print("Who are you? Please give me your name")
     #name=input()
-    print("Please key in your temperature")
-    temp=eval(input())
-    tim=time.time()
+    ##print("Please key in your temperature")
+    #temp=eval(input())
+    #tim=time.time()
     #image login is from image recognition
     try:
         inf=open("image_login.csv","r")
@@ -62,8 +62,19 @@ while 1:
     ter=""
     ter+=bufl+","
     if bufl in blacklist:
+        temp = 99
+        print("Please Stay Where You Are - Someone Will Come Over.")
         ter+="2,%s\n" % temp
-    elif temp>37.5:
+        outf.write(ter)
+        
+    print("Please key in your temperature")
+    temp=eval(input()) 
+    print("temp = ", temp)
+    tim=time.time()
+    
+    if bufl in blacklist:
+        temp = 99        
+    elif temp>=38:
         ter+="1,%s\n" % temp
     else:
         ter+="99999,%s\n" % temp
