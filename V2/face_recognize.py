@@ -7,7 +7,9 @@ Created on Mon Mar  2 18:23:23 2020
 
 #code forked and tweaked from https://github.com/ageitgey/face_recognition/blob/master/examples/facerec_from_webcam_faster.py
 #to extend, just add more people into the known_people folder
-
+#
+#work_folder="C:\\Users\\User\\Documents\\UiPath\\IPA_CA_v0\\"
+work_folder=".\\image\\"
 import face_recognition
 import cv2
 import numpy as np
@@ -59,7 +61,7 @@ outfile.write("Name,Time\n")
 for name in known_face_names:
     outfile.write("%s,99999\n" % (re.split("\\\\",name)[-1].replace("_NUS","")) )
 outfile.close()
-
+recognizedFace=[]
 while True:
     if not video_capture.isOpened():
         if debug==1: print('Unable to load camera.')
@@ -78,7 +80,7 @@ while True:
     
     # Resize frame of video to 3 times the size for larger display
     frame = frame #cv2.resize(frame, (240,240), fx=3, fy=3) 
-    cv2.imwrite("C:\\Users\\User\\Documents\\UiPath\\IPA_CA_v0\\save_frame.jpg",frame)
+    cv2.imwrite(work_folder+"save_frame.jpg",frame)
     #frame =cv2.resize(frame, (180,180), interpolation = cv2.INTER_CUBIC) 
 
     # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
@@ -132,7 +134,12 @@ while True:
 
             datestamp=int( time.time() )
             attendance[name]=datestamp
-            cv2.imwrite("C:\\Users\\User\\Documents\\UiPath\\IPA_CA_v0\\%s_%s.jpg" % (datestamp,name2), frame)
+            cv2.imwrite(work_folder+"%s_%s.jpg" % (datestamp,name2), frame)
+            if name2 not in recognizedFace:
+                recognizedFace.append(name2)
+                cv2.imwrite(work_folder+"%s.jpg" % name2, frame)
+                
+                
             outfile2=open("image_login.csv","w+")
             
             
