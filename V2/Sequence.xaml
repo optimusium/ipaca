@@ -38,7 +38,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1484.8,7023.2</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1484.8,7210.4</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Sequence_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="25">
@@ -96,12 +96,18 @@
       <AssemblyReference>System.Data.Entity</AssemblyReference>
     </scg:List>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Sequence" sap:VirtualizedContainerService.HintSize="1464.8,6923.2" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="Sequence" sap:VirtualizedContainerService.HintSize="1464.8,7110.4" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="sd:DataTable" Name="imageLogin" />
       <Variable x:TypeArguments="x:String" Name="variable1" />
       <Variable x:TypeArguments="x:Boolean" Default="False" Name="email_test_blacklist" />
       <Variable x:TypeArguments="x:Boolean" Default="False" Name="email_test_symptom" />
+      <Variable x:TypeArguments="scg:List(x:String)" Default="[New List(Of String)]" Name="emailed" />
+      <Variable x:TypeArguments="x:String" Name="emailed_initial">
+        <Variable.Default>
+          <Literal x:TypeArguments="x:String" Value="" />
+        </Variable.Default>
+      </Variable>
     </Sequence.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -228,14 +234,16 @@
         </ui:Target>
       </ui:TypeInto.Target>
     </ui:TypeInto>
-    <DoWhile DisplayName="Do While" sap:VirtualizedContainerService.HintSize="1423.2,5420.8" sap2010:WorkflowViewState.IdRef="DoWhile_1">
+    <AddToCollection x:TypeArguments="x:String" Collection="[emailed]" DisplayName="Add To Collection" sap:VirtualizedContainerService.HintSize="1423.2,22.4" sap2010:WorkflowViewState.IdRef="AddToCollection`1_1" Item="[emailed_initial]" />
+    <DoWhile DisplayName="Do While" sap:VirtualizedContainerService.HintSize="1423.2,5545.6" sap2010:WorkflowViewState.IdRef="DoWhile_1">
       <DoWhile.Variables>
         <Variable x:TypeArguments="x:Int32" Name="tim" />
       </DoWhile.Variables>
       <DoWhile.Condition>True</DoWhile.Condition>
-      <Sequence sap:VirtualizedContainerService.HintSize="1378.4,5258.4" sap2010:WorkflowViewState.IdRef="Sequence_5">
+      <Sequence sap:VirtualizedContainerService.HintSize="1378.4,5383.2" sap2010:WorkflowViewState.IdRef="Sequence_5">
         <Sequence.Variables>
           <Variable x:TypeArguments="ui:GenericValue" Name="TestVar" />
+          <Variable x:TypeArguments="x:Boolean" Name="emailedStatus" />
         </Sequence.Variables>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -308,24 +316,25 @@
             <ActivityFunc x:TypeArguments="x:Boolean" />
           </ui:RetryScope.Condition>
         </ui:RetryScope>
-        <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[imageLogin]" DisplayName="For Each Row" sap:VirtualizedContainerService.HintSize="1336.8,3923.2" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+        <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[imageLogin]" DisplayName="For Each Row" sap:VirtualizedContainerService.HintSize="1336.8,4048" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
           <ui:ForEachRow.Body>
             <ActivityAction x:TypeArguments="sd:DataRow">
               <ActivityAction.Argument>
                 <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
               </ActivityAction.Argument>
-              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="1287.2,3774.4" sap2010:WorkflowViewState.IdRef="Sequence_4">
+              <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="1287.2,3899.2" sap2010:WorkflowViewState.IdRef="Sequence_4">
                 <sap:WorkflowViewStateService.ViewState>
                   <scg:Dictionary x:TypeArguments="x:String, x:Object">
                     <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                   </scg:Dictionary>
                 </sap:WorkflowViewStateService.ViewState>
-                <If Condition="[row(1).Equals(&quot;99999&quot;)]" sap:VirtualizedContainerService.HintSize="1245.6,3681.6" sap2010:WorkflowViewState.IdRef="If_2">
+                <ExistsInCollection x:TypeArguments="x:String" Collection="[emailed]" DisplayName="Exists In Collection" sap:VirtualizedContainerService.HintSize="1245.6,22.4" sap2010:WorkflowViewState.IdRef="ExistsInCollection`1_1" Item="[row(0).ToString]" Result="[emailedStatus]" />
+                <If Condition="[row(1).Equals(&quot;99999&quot;) Or emailedStatus.Equals(True)]" sap:VirtualizedContainerService.HintSize="1245.6,3744" sap2010:WorkflowViewState.IdRef="If_2">
                   <If.Then>
                     <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="228.8,62.4" sap2010:WorkflowViewState.IdRef="WriteLine_4" Text="[row(1).ToString]" />
                   </If.Then>
                   <If.Else>
-                    <Sequence sap:VirtualizedContainerService.HintSize="972.8,3532" sap2010:WorkflowViewState.IdRef="Sequence_6">
+                    <Sequence sap:VirtualizedContainerService.HintSize="972.8,3594.4" sap2010:WorkflowViewState.IdRef="Sequence_6">
                       <Sequence.Variables>
                         <Variable x:TypeArguments="x:String" Name="user_in_name" />
                         <Variable x:TypeArguments="ui:GenericValue" Name="user_in_blacklist" />
@@ -339,6 +348,7 @@
                           <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                         </scg:Dictionary>
                       </sap:WorkflowViewStateService.ViewState>
+                      <AddToCollection x:TypeArguments="x:String" Collection="[emailed]" DisplayName="Add To Collection" sap:VirtualizedContainerService.HintSize="931.2,22.4" sap2010:WorkflowViewState.IdRef="AddToCollection`1_2" Item="[row(0).ToString]" />
                       <If Condition="[row(1).Equals(&quot;2&quot;)]" sap:VirtualizedContainerService.HintSize="931.2,436" sap2010:WorkflowViewState.IdRef="If_3">
                         <If.Then>
                           <ui:MultipleAssign DisplayName="Assign Blacklist Case Argument" sap:VirtualizedContainerService.HintSize="337.6,286.4" sap2010:WorkflowViewState.IdRef="MultipleAssign_1">
