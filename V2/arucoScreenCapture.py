@@ -30,31 +30,33 @@ while True:
     ret, frame = video_capture.read()
     if ret!=True: continue
 
-    # Only process every other frame of video to save time
-    if process_this_frame:
-        aruco_dict = aruco.Dictionary_get(aruco.DICT_APRILTAG_16h5)
-        parameters =  aruco.DetectorParameters_create()
-        corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
-        corners_np = np.array(corners)
-        corners_npint = corners_np.astype(int)
+    aruco_dict = aruco.Dictionary_get(aruco.DICT_APRILTAG_16h5)
+    parameters =  aruco.DetectorParameters_create()
+    corners, ids, rejectedImgPoints = aruco.detectMarkers(frame, aruco_dict, parameters=parameters)
+    corners_np = np.array(corners)
+    corners_npint = corners_np.astype(int)
         
-        if tuple(corners_npint) != ():
-            try:
-                marker1 = tuple(corners_npint[0][0][0])
-                marker2 = tuple(corners_npint[1][0][0])
-                rec = cv2.rectangle(frame,  marker1,  marker2, color=(0,255,0))
-                cv2.imwrite("rec.jpg", rec)
+    if tuple(corners_npint) != ():
+        try:
+            marker1 = tuple(corners_npint[0][0][0])
+            marker2 = tuple(corners_npint[1][0][0])
+            rec = cv2.rectangle(frame,  marker1,  marker2, color=(0,255,0))
+            cv2.imwrite("rec.png", rec)
                 
-                im = Image.open("rec.jpg")
-                crop = marker1 + marker2
-                im.crop(crop).save("crop.jpg")
-                print("Image saved")
-                time.sleep(5)
-            except:
-                pass
+            im = Image.open("rec.png")
+            crop = marker1 + marker2
+            ts = time.time()
+            im_crop = im.crop(crop)
+            print(im_crop.size)
+            #im_crop.show()
+            if im_crop.size != (0, 0):
+                im_crop.save(str(int(ts)) + "crop.png", quality=95, format="PNG")
+                print("Image saved at " + str(int(ts)))
+                im.close()
+                time.sleep(2)
+        except:
+            pass
                     
-    process_this_frame = not process_this_frame
-
     # Hit 'q' on the keyboard to quit!
     if key == ord("q"):
         break
