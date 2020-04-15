@@ -27,7 +27,8 @@ def main(argv):
 
     client = vision.ImageAnnotatorClient()
     alog.info(f'Create client and connect to google cloud')
-
+    ##############################################################################
+    #face_recognition setup
     #make array of sample pictures with encodings
     known_face_encodings = []
     known_face_names = []
@@ -61,7 +62,25 @@ def main(argv):
     for name in known_face_names:
         outfile.write("%s,99999\n" % (re.split("\\\\",name)[-1].replace("_NUS","")) )
     outfile.close()
-
+    ###############################################################################
+    #initialize alert file
+    inf0=open("alert_initial.csv","r")
+    inf0.readline()
+    outf0=open("alert.csv","w+")
+    outf0.write("Name,Alert,Temperature\n")
+    for line in inf0.readlines():
+        outf0.write(line)
+    outf0.close()
+    inf0.close()
+    time.sleep(0.01)
+    
+    inf99=open("stop.csv","w+")
+    inf99.close()
+    
+    os.popen("copy alert.csv alert_bk.csv")
+    time.sleep(0.1)
+    os.popen("del stop.csv")
+    ##################################################################################    
 
     try:
         # Get a reference to webcam #0 (the default one)
@@ -71,12 +90,25 @@ def main(argv):
         start_time = time.time()
                 
         while capture_temp:
+            #blacklist handling
+            blacklist=[]
+            inf9=open("blacklist.csv","r")
+            inf9.readline()
+            for line in inf9.readlines():
+                line=line.replace("\n","")
+                if line=="": continue
+                buf=re.split(",",line)
+                if buf[0]!="":
+                    blacklist.append(buf[0])
+            #####################################################
+            #capturing video        
             current_time = time.time()
             time_laped = int(current_time - start_time)
             
             start_time = current_time
             
             success, image = vidcap.read()
+            if success!=True: continue
             frame=image
             # Convert BGR to RGB color for display
             #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -89,23 +121,8 @@ def main(argv):
             
             key = cv2.waitKey(25)
             
-            if key & 0xFF == ord('q'):
-                capture_temp = False
-                alog.info("Stoped")
-            elif key & 0xFF == ord('w'):
-                cv2.imwrite("frames/frame_%d.jpg" % time_laped, image)
-                alog.info("Save frames/frame_%d.jpg" % time_laped)
-                
-                temp_read = read_temp_from_image(image, client)
-                if temp_read > 0:
-                    alog.info(f"Found temperature: '{temp_read}'")
-                    #cv2.imwrite("frames/frame_%d.jpg" % time_laped, image)
-            else:
-                temp_read = read_temp_from_image(image, client)
-                if temp_read > 0:
-                    #cv2.imwrite("frames/frame_%d.jpg" % time_laped, image)
-                    alog.info(f"Found temperature: '{temp_read}'")
 
+            #Face recognition
             # Resize frame of video to 1/4 size for faster face recognition processing
             small_frame = frame # cv2.resize(frame, (120,120), fx=0.25, fy=0.25)
             #small_frame=cv2.resize(frame, (120,120 ), interpolation = cv2.INTER_CUBIC)
@@ -192,6 +209,90 @@ def main(argv):
                 if attendance[name]<time.time()-43200:
                     attendance.pop(name, None) 
             #time.sleep(1)
+            #############################################################################
+            #check blacklist
+            try:
+                inf=open("image_login.csv","r")
+            except:
+                time.sleep(1)
+                inf=open("image_login.csv","r")
+                pass
+            #generating alert file
+            try:
+                outf=open("alert.csv","w+")
+            except:
+                time.sleep(1)
+                outf=open("alert.csv","w+")
+                pass
+            outf.write("Name,Alert,Temperature\n")
+            bufl=""
+            latest=99999.0
+            inf.readline()
+            for line in inf.readlines():
+                line=line.replace("\n","")
+                buf=re.split(",",line)
+                if len(buf)<2: continue
+                #print(eval(buf[1]),latest)
+                if eval(buf[1])>latest:
+                    latest=eval(buf[1])
+                    bufl=buf[0]
+            ter=""
+            ter+=bufl+","
+            if bufl in blacklist:
+                temp = 99
+                print("Please Stay Where You Are - Someone Will Come Over.")
+                ter+="2,%s\n" % temp
+                outf.write(ter)
+            #######################################################################
+            
+            #capturing temperature
+            if key & 0xFF == ord('q'):
+                capture_temp = False
+                alog.info("Stopped")
+            elif key & 0xFF == ord('w'):
+                cv2.imwrite("frames/frame_%d.jpg" % time_laped, image)
+                alog.info("Save frames/frame_%d.jpg" % time_laped)
+                
+                temp_read = read_temp_from_image(image, client)
+                if temp_read > 0:
+                    alog.info(f"Found temperature: '{temp_read}'")
+                    #cv2.imwrite("frames/frame_%d.jpg" % time_laped, image)
+            else:
+                temp_read = read_temp_from_image(image, client)
+                if temp_read > 0:
+                    #cv2.imwrite("frames/frame_%d.jpg" % time_laped, image)
+                    alog.info(f"Found temperature: '{temp_read}'")
+            
+            if temp_read<=0: continue
+            temp=temp_read
+            ##########################################################################
+            #temperature record
+            if bufl in blacklist:
+                temp = 99        
+            elif temp>=38:
+                ter+="1,%s\n" % temp
+            else:
+                ter+="99999,%s\n" % temp
+            outf.write(ter)
+            for line in inf.readlines():
+                line=line.replace("\n","")
+                buf=re.split(",",line)
+                if buf[1] in blacklist:
+                    ter+=buf[1]+"2,%s\n" % temp
+                elif buf[1]!=bufl:
+                    ter=buf[1]+",99999,%s\n" % temp
+            outf.write(ter)
+            outf.close()
+            inf.close()
+            time.sleep(0.01)
+        
+            inf99=open("stop.csv","w+")
+            inf99.close()
+            
+            os.popen("copy alert.csv alert_bk.csv")
+            time.sleep(0.1)
+            os.popen("del stop.csv")
+            ##########################################################################
 
                 
     except Exception as exp:
