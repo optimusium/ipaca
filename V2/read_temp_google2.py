@@ -117,7 +117,7 @@ def main(argv):
                 capture_temp = False
                 break
                 
-            cv2.imshow("frame", image)
+            #cv2.imshow("frame", image)
             
             key = cv2.waitKey(25)
             
