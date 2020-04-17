@@ -38,7 +38,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1318.4,4066.4</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1318.4,4106.4</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Sequence_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <scg:List x:TypeArguments="x:String" Capacity="25">
@@ -349,39 +349,19 @@
                             </sap:WorkflowViewStateService.ViewState>
                             <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Blacklist Email" sap:VirtualizedContainerService.HintSize="333.6,88" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="InformEmailModule.xaml">
                               <ui:InvokeWorkflowFile.Arguments>
-                                <InArgument x:TypeArguments="x:Boolean" x:Key="user_in_blacklist">
-                                  <Literal x:TypeArguments="x:Boolean" Value="True" />
-                                </InArgument>
-                                <InArgument x:TypeArguments="x:String" x:Key="user_in_name">
-                                  <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="row(0).ToString" />
-                                </InArgument>
-                                <InArgument x:TypeArguments="x:Boolean" x:Key="user_in_symptom">
-                                  <Literal x:TypeArguments="x:Boolean" />
-                                </InArgument>
-                                <OutArgument x:TypeArguments="x:String" x:Key="email_out_status">
-                                  <mva:VisualBasicReference x:TypeArguments="x:String" ExpressionText="email_module_status" />
-                                </OutArgument>
-                                <OutArgument x:TypeArguments="x:String" x:Key="email_out_details">
-                                  <mva:VisualBasicReference x:TypeArguments="x:String" ExpressionText="email_module_details" />
-                                </OutArgument>
+                                <InArgument x:TypeArguments="x:Boolean" x:Key="user_in_blacklist">True</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="user_in_name">[row(0).ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:Boolean" x:Key="user_in_symptom">False</InArgument>
+                                <OutArgument x:TypeArguments="x:String" x:Key="email_out_status">[email_module_status]</OutArgument>
+                                <OutArgument x:TypeArguments="x:String" x:Key="email_out_details">[email_module_details]</OutArgument>
                                 <InArgument x:TypeArguments="x:String" x:Key="user_in_symptom_list">
                                   <Literal x:TypeArguments="x:String" Value="" />
                                 </InArgument>
-                                <InArgument x:TypeArguments="x:String" x:Key="user_in_blacklist_reason">
-                                  <Literal x:TypeArguments="x:String">SHN (Stay Home Notice)</Literal>
-                                </InArgument>
-                                <InArgument x:TypeArguments="x:String" x:Key="user_in_attach_path">
-                                  <Literal x:TypeArguments="x:String">email_data\test_attach.PNG</Literal>
-                                </InArgument>
-                                <InArgument x:TypeArguments="x:String" x:Key="user_in_detect_time">
-                                  <Literal x:TypeArguments="x:String">2020-04-16 9:58:40 PM</Literal>
-                                </InArgument>
-                                <InOutArgument x:TypeArguments="sd:DataTable" x:Key="email_in_out_config">
-                                  <mva:VisualBasicReference x:TypeArguments="sd:DataTable" ExpressionText="email_module_config" />
-                                </InOutArgument>
-                                <InOutArgument x:TypeArguments="sd:DataTable" x:Key="email_in_out_templates">
-                                  <mva:VisualBasicReference x:TypeArguments="sd:DataTable" ExpressionText="email_module_templates" />
-                                </InOutArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="user_in_blacklist_reason">SHN (Stay Home Notice)</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="user_in_attach_path">email_data\test_attach.PNG</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="user_in_detect_time">2020-04-16 9:58:40 PM</InArgument>
+                                <InOutArgument x:TypeArguments="sd:DataTable" x:Key="email_in_out_config">[email_module_config]</InOutArgument>
+                                <InOutArgument x:TypeArguments="sd:DataTable" x:Key="email_in_out_templates">[email_module_templates]</InOutArgument>
                               </ui:InvokeWorkflowFile.Arguments>
                               <sap:WorkflowViewStateService.ViewState>
                                 <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -420,7 +400,7 @@
                                   <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="&quot;Fever &quot;+ row(2).ToString + &quot; °C&quot;" />
                                 </InArgument>
                                 <InArgument x:TypeArguments="x:String" x:Key="user_in_blacklist_reason">
-                                  <Literal x:TypeArguments="x:String">SHN (Stay Home Notice)</Literal>
+                                  <Literal x:TypeArguments="x:String" xml:space="preserve">SHN (Stay Home Notice) </Literal>
                                 </InArgument>
                                 <InArgument x:TypeArguments="x:String" x:Key="user_in_attach_path">
                                   <Literal x:TypeArguments="x:String">email_data\test_attach.PNG</Literal>
